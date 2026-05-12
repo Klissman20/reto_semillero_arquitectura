@@ -11,7 +11,6 @@ Aplicación React que replica el diseño de un buscador de convenios de pago ban
 
 ## Captura del diseño objetivo
 
-![Diseño esperado](../Esperado.png)
 
 ---
 
