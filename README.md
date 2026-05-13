@@ -23,7 +23,8 @@ Aplicación React que replica el diseño de un buscador de convenios de pago ban
 - **Selector "Mostrar N"**: cambia el tamaño de página (5, 10, 25, 50) y reinicia a la primera página.
 - **Contador de resultados**: muestra `N de M resultados` en tiempo real tras la búsqueda.
 - **Paginación con ellipsis**: siempre muestra la primera, la última página y las vecinas de la página activa.
-- **38 convenios mock** distribuidos entre Banco Popular, Banco de Occidente, AV Villas y Banco de Bogotá.
+- **38 convenios mock** (solo en `convenios-stable/`): datos locales en `src/data/convenios.js`.
+- **Canary con API** (`convenios-canary/`): listado solo desde `GET /convenios` (`VITE_CONVENIOS_API_URL` en `.env`).
 - **Badge Canary** (solo en `convenios-canary/`): chip fijo en la esquina superior derecha con punto animado y número de versión.
 
 ---
@@ -72,11 +73,21 @@ reto_semillero_arquitectura/
     ├── eslint.config.js
     └── src/
         ├── main.jsx
-        ├── App.jsx                  # Idéntico a stable + badge Canary
+        ├── App.jsx                  # Carga API + badge Canary
         ├── index.css
+        ├── api/
+        │   └── fetchConvenios.js
+        ├── lib/
+        │   └── mapLambdaConvenio.js
         ├── data/
-        │   └── convenios.js
-        └── components/              # Misma estructura de componentes
+        │   └── departamentos.js     # Opciones del dropdown (solo UI)
+        └── components/
+            ├── SearchBar.jsx
+            ├── BankLogo.jsx
+            ├── ConvenioCard.jsx
+            ├── ConvenioGrid.jsx
+            ├── ResultsHeader.jsx
+            └── Pagination.jsx
 ```
 
 ---

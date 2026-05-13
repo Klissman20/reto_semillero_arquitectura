@@ -1,4 +1,4 @@
-import { DEPARTAMENTOS } from '../data/convenios';
+import { DEPARTAMENTOS } from '../data/departamentos';
 
 function SearchIcon() {
   return (

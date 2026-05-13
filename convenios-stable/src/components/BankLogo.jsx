@@ -2,7 +2,7 @@
  * Placeholder logo for a bank — colored square with initials.
  * Replicates the visual weight of real bank logos without requiring assets.
  */
-export default function BankLogo({ banco, iniciales, bgColor, textColor, faded = false }) {
+export default function BankLogo({banco, iniciales, bgColor, textColor, faded = false}) {
   return (
     <div className="flex flex-col items-center justify-center gap-1">
       <div
@@ -18,7 +18,7 @@ export default function BankLogo({ banco, iniciales, bgColor, textColor, faded =
       </div>
       <span
         className="text-xs font-semibold text-gray-700 text-center leading-tight transition-opacity duration-200"
-        style={{ opacity: faded ? 0.35 : 1 }}
+        style={{opacity: faded ? 0.35 : 1}}
       >
         {banco}
       </span>
