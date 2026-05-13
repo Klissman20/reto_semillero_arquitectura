@@ -7,6 +7,59 @@ import ConvenioGrid from './components/ConvenioGrid';
 import Pagination from './components/Pagination';
 import './index.css';
 
+function getCanaryCookie() {
+  const match = document.cookie.split('; ').find((row) => row.startsWith('x-canary='));
+  return match ? match.split('=')[1] : null;
+}
+
+function setCanaryCookie(value) {
+  document.cookie = `x-canary=${value}; path=/; max-age=86400; SameSite=Lax`;
+}
+
+function CanaryToggle() {
+  const [cookieValue, setCookieValue] = useState(getCanaryCookie);
+
+  useEffect(() => {
+    function onFocus() {
+      setCookieValue(getCanaryCookie());
+    }
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
+
+  const isOn = cookieValue === 'true';
+
+  function handleToggle() {
+    const next = isOn ? 'false' : 'true';
+    setCanaryCookie(next);
+    setCookieValue(next);
+  }
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-white border border-gray-200 shadow-lg rounded-full px-3 py-2 select-none">
+      <span className="text-xs font-semibold text-gray-600">Canary</span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={isOn}
+        onClick={handleToggle}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500 cursor-pointer ${
+          isOn ? 'bg-green-500' : 'bg-gray-300'
+        }`}
+      >
+        <span
+          className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform duration-200 ${
+            isOn ? 'translate-x-6' : 'translate-x-1'
+          }`}
+        />
+      </button>
+      <span className={`text-xs font-mono font-bold ${isOn ? 'text-green-600' : 'text-gray-400'}`}>
+        {isOn ? 'true' : cookieValue === 'false' ? 'false' : 'off'}
+      </span>
+    </div>
+  );
+}
+
 const CONVENIOS_API_URL = import.meta.env.VITE_CONVENIOS_API_URL?.trim() ?? '';
 const HAS_API_URL = Boolean(CONVENIOS_API_URL);
 
@@ -85,11 +138,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white relative">
-      <div className="fixed top-3 right-3 z-50 flex items-center gap-1.5 bg-amber-400 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-full shadow-md select-none">
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-700 animate-pulse"></span>
-        Canary
-        <span className="text-amber-700 font-normal">v19.3.0</span>
-      </div>
+      <CanaryToggle />
 
       <div className="max-w-5xl mx-auto px-6 py-8">
         <SearchBar
