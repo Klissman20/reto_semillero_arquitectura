@@ -1,51 +1,67 @@
-# Reto Semillero Arquitectura — Buscador de Convenios Bancarios
+# Reto Semillero Arquitectura — Buscador de convenios bancarios
 
-Aplicación React que replica el diseño de un buscador de convenios de pago bancarios, estilo fintech LATAM. El repositorio contiene **dos versiones paralelas** del mismo frontend:
+Aplicación **React** que replica el diseño de un buscador de convenios de pago bancarios con estilo fintech LATAM. El repositorio incluye **dos frontends paralelos** del mismo producto para comparar versiones de React en desarrollo.
 
-| Versión | Carpeta | React | Puerto dev |
-|---|---|---|---|
-| Stable | `convenios-stable/` | 19.2.6 (latest stable) | 5173 |
-| Canary | `convenios-canary/` | 19.3.0-canary (pre-release) | 5174 |
+| Versión    | Carpeta             | React                       | Puerto (dev) |
+| :--------- | :------------------ | :-------------------------- | :----------- |
+| **Stable** | `convenios-stable/` | 19.2.6 (última estable)     | **5173**     |
+| **Canary** | `convenios-canary/` | 19.3.0-canary (pre-release) | **5174**     |
+
+---
+
+## Tabla de contenidos
+
+1. [Captura del diseño objetivo](#captura-del-diseño-objetivo)
+2. [Funcionalidades](#funcionalidades-implementadas)
+3. [Stack tecnológico](#stack-tecnológico)
+4. [Estructura del proyecto](#estructura-del-proyecto)
+5. [Inicio rápido](#inicio-rápido)
+6. [Scripts](#scripts-disponibles)
+7. [Diferencias entre versiones](#diferencias-entre-versiones)
+8. [Decisiones de diseño](#decisiones-de-diseño)
+9. [API y variables de entorno](#api-y-variables-de-entorno)
+10. [Build y despliegue](#build-y-despliegue)
 
 ---
 
 ## Captura del diseño objetivo
 
+![Vista previa](docs/captura.png)`.
 
 ---
 
 ## Funcionalidades implementadas
 
-- **Búsqueda en dos fases**: el usuario escribe libremente en el input y la búsqueda se aplica únicamente al presionar el botón *Buscar* o la tecla Enter (evita re-renders mientras se escribe).
-- **Filtro por Departamento**: dropdown con label flotante, listo para conectar a datos reales.
-- **Grid de tarjetas** (4 columnas, responsive 2 → 3 → 4): cada tarjeta muestra el logo/color del banco y el nombre del convenio.
-- **Hover interactivo**: al pasar el cursor sobre una tarjeta aparecen los botones *Pagar* e *Inscribir* con overlay sobre el logo.
-- **Selector "Mostrar N"**: cambia el tamaño de página (5, 10, 25, 50) y reinicia a la primera página.
-- **Contador de resultados**: muestra `N de M resultados` en tiempo real tras la búsqueda.
-- **Paginación con ellipsis**: siempre muestra la primera, la última página y las vecinas de la página activa.
-- **38 convenios mock** (solo en `convenios-stable/`): datos locales en `src/data/convenios.js`.
-- **Canary con API** (`convenios-canary/`): listado solo desde `GET /convenios` (`VITE_CONVENIOS_API_URL` en `.env`).
-- **Badge Canary** (solo en `convenios-canary/`): chip fijo en la esquina superior derecha con punto animado y número de versión.
+| Área                        | Detalle                                                                                                                             |
+| :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
+| **Búsqueda en dos fases**   | El usuario escribe en el input; la búsqueda se aplica solo al pulsar **Buscar** o **Enter** (evita re-renders mientras se escribe). |
+| **Filtro por departamento** | Dropdown con label flotante, listo para conectar a datos reales.                                                                    |
+| **Grid de tarjetas**        | Cuatro columnas, responsive (2 → 3 → 4); logo/color del banco y nombre del convenio.                                                |
+| **Hover**                   | Sobre la tarjeta aparecen **Pagar** e **Inscribir** con overlay sobre el logo.                                                      |
+| **“Mostrar N”**             | Tamaño de página (5, 10, 25, 50) y vuelta a la primera página.                                                                      |
+| **Contador**                | Muestra `N de M resultados` tras la búsqueda.                                                                                       |
+| **Paginación**              | Primera, última y páginas vecinas a la activa, con ellipsis.                                                                        |
+| **API**                     | Listado desde `VITE_CONVENIOS_API_URL` definida en `.env`.                                                                          |
 
 ---
 
 ## Stack tecnológico
 
-| Herramienta | Versión |
-|---|---|
-| React | 19.2.6 / 19.3.0-canary |
-| Vite | ^8.0.12 |
-| Tailwind CSS | ^4.3.0 (plugin `@tailwindcss/vite`) |
-| ESLint | ^10.3.0 |
-| Node.js | >= 20 |
+| Herramienta  | Versión                      |
+| :----------- | :--------------------------- |
+| React        | 19.2.6 / 19.3.0-canary       |
+| Vite         | ^8.0.12                      |
+| Tailwind CSS | ^4.3.0 (`@tailwindcss/vite`) |
+| ESLint       | ^10.3.0                      |
+| Node.js      | >= 20                        |
 
-> **Tailwind v4**: no requiere `tailwind.config.js`. La configuración completa es `@import "tailwindcss"` en `src/index.css`.
+> **Tailwind v4:** no requiere `tailwind.config.js`. La configuración base es `@import "tailwindcss"` en `src/index.css`.
 
 ---
 
 ## Estructura del proyecto
 
-```
+```text
 reto_semillero_arquitectura/
 ├── README.md
 ├── convenios-stable/
@@ -54,33 +70,39 @@ reto_semillero_arquitectura/
 │   ├── vite.config.js
 │   ├── eslint.config.js
 │   └── src/
+│       ├── .env                     # VITE_CONVENIOS_API_URL
 │       ├── main.jsx
-│       ├── App.jsx                  # Orquesta estado global
+│       ├── App.jsx                  # Estado global
 │       ├── index.css                # @import "tailwindcss"
+│       ├── api/
+│       │   └── fetchConvenios.js
 │       ├── data/
-│       │   └── convenios.js         # 38 registros mock
+│       │   └── departamentos.js     # Mock departamentos
+│       ├── lib/
+│       │   └── mapLambdaConvenio.js # Mapper respuesta API → Convenio
 │       └── components/
-│           ├── SearchBar.jsx        # Input + dropdown + botón Buscar
-│           ├── BankLogo.jsx         # Placeholder colorido con iniciales
-│           ├── ConvenioCard.jsx     # Tarjeta con estado hover
-│           ├── ConvenioGrid.jsx     # Grid 4 columnas responsive
-│           ├── ResultsHeader.jsx    # Selector "Mostrar N" + contador
-│           └── Pagination.jsx       # Paginación con ellipsis
+│           ├── SearchBar.jsx
+│           ├── BankLogo.jsx
+│           ├── ConvenioCard.jsx
+│           ├── ConvenioGrid.jsx
+│           ├── ResultsHeader.jsx
+│           └── Pagination.jsx
 └── convenios-canary/
     ├── index.html
     ├── package.json
     ├── vite.config.js
     ├── eslint.config.js
     └── src/
+        ├── .env
         ├── main.jsx
-        ├── App.jsx                  # Carga API + badge Canary
+        ├── App.jsx                  # API + badge Canary
         ├── index.css
         ├── api/
         │   └── fetchConvenios.js
         ├── lib/
         │   └── mapLambdaConvenio.js
         ├── data/
-        │   └── departamentos.js     # Opciones del dropdown (solo UI)
+        │   └── departamentos.js
         └── components/
             ├── SearchBar.jsx
             ├── BankLogo.jsx
@@ -94,106 +116,104 @@ reto_semillero_arquitectura/
 
 ## Inicio rápido
 
-### Requisitos previos
+### Requisitos
 
-- Node.js >= 20
-- npm >= 10
+- **Node.js** >= 20
+- **npm** >= 10
 
-### Versión Stable
+### Stable
 
 ```bash
 cd convenios-stable
 npm install
 npm run dev
-# Servidor disponible en → http://localhost:5173
 ```
 
-### Versión Canary
+Servidor: [http://localhost:5173](http://localhost:5173)
+
+### Canary
 
 ```bash
 cd convenios-canary
 npm install
 npm run dev
-# Servidor disponible en → http://localhost:5174
 ```
 
-Ambos servidores pueden correr en paralelo sin conflictos de puerto.
+Servidor: [http://localhost:5174](http://localhost:5174)
+
+Ambos pueden ejecutarse a la vez sin conflicto de puertos.
 
 ---
 
 ## Scripts disponibles
 
-Aplican igual en ambas carpetas:
+Válidos en **ambas** carpetas (`convenios-stable` y `convenios-canary`):
 
-| Script | Descripción |
-|---|---|
-| `npm run dev` | Servidor de desarrollo con HMR |
-| `npm run build` | Build de producción en `dist/` |
-| `npm run preview` | Previsualiza el build de producción localmente |
-| `npm run lint` | Analiza el código con ESLint |
+| Script            | Descripción                    |
+| :---------------- | :----------------------------- |
+| `npm run dev`     | Desarrollo con HMR             |
+| `npm run build`   | Build de producción en `dist/` |
+| `npm run preview` | Sirve el build localmente      |
+| `npm run lint`    | ESLint                         |
 
 ---
 
 ## Diferencias entre versiones
 
-| Característica | `convenios-stable` | `convenios-canary` |
-|---|---|---|
-| Versión de React | `19.2.6` (latest stable) | `19.3.0-canary-d5736f09-20260507` |
-| Badge visual | No | Sí — chip "Canary v19.3.0" en esquina |
-| Código de componentes | Idéntico | Idéntico |
-| Propósito | Producción / referencia | Prueba de nuevas APIs de React |
+| Característica | `convenios-stable`      | `convenios-canary`                |
+| :------------- | :---------------------- | :-------------------------------- |
+| React          | `19.2.6` (estable)      | `19.3.0-canary-d5736f09-20260507` |
+| Badge visual   | No                      | Sí — chip “Canary v19.3.0”        |
+| Componentes    | Misma base              | Misma base                        |
+| Propósito      | Producción / referencia | Probar APIs nuevas de React       |
+| Cookies        | No                      | Según elección del usuario        |
 
-La versión canary permite probar funcionalidades en desarrollo del equipo de React antes de que sean parte de una release oficial. Cualquier diferencia de comportamiento entre versiones indica una regresión o cambio en la API canary.
+La versión **Canary** sirve para anticipar cambios del equipo de React antes de una release estable. Diferencias de comportamiento entre carpetas pueden indicar regresiones o cambios en la API canary.
 
 ---
 
 ## Decisiones de diseño
 
-- **Búsqueda en dos fases** (`inputQuery` vs `activeQuery`): separa el estado del input del estado de búsqueda activa para no filtrar mientras el usuario escribe, mejorando la UX y reduciendo renders innecesarios.
-- **`useMemo` en el filtro**: el array filtrado solo se recalcula cuando cambia `activeQuery`, no en cada render.
-- **Hover con `useState` local**: cada `ConvenioCard` gestiona su propio estado de hover de forma independiente, sin necesidad de estado global.
-- **Placeholders de logos con color**: dado que no existen assets reales de los bancos, se usan divs con color de fondo distintivo por banco y las iniciales como texto, manteniendo la identidad visual del mockup.
-- **Tailwind v4 sin config file**: la integración vía plugin de Vite elimina la necesidad de configuración adicional para proyectos nuevos.
+- **Búsqueda en dos fases** (`inputQuery` vs `activeQuery`): el texto del input no filtra hasta confirmar búsqueda; mejora la UX y reduce renders.
+- **`useMemo` en el filtro**: el arreglo filtrado se recalcula cuando cambia `activeQuery`, no en cada render.
+- **Hover local en `ConvenioCard`**: cada tarjeta gestiona su hover sin estado global.
+- **Logos placeholder**: sin assets reales, colores por banco e iniciales para mantener el look del mockup.
+- **Tailwind v4 sin `tailwind.config.js`**: integración vía plugin de Vite para proyectos nuevos sin configuración extra.
 
 ---
 
-## Cómo extender
+## API y variables de entorno
 
-### Conectar datos reales
+En la raíz de `src/` de cada proyecto, edita `.env` y define la URL del backend:
 
-Reemplaza el array en `src/data/convenios.js` con una llamada a tu API:
-
-```js
-// src/data/convenios.js
-export async function fetchConvenios() {
-  const res = await fetch('/api/convenios');
-  return res.json();
-}
+```env
+VITE_CONVENIOS_API_URL=https://ejemplo.amazonaws.com/dev/api
 ```
 
-Y actualiza `App.jsx` para usar `useEffect` con la función async.
+Vite solo expone variables que empiezan por `VITE_`. Tras cambiar `.env`, reinicia el servidor de desarrollo.
 
-### Activar el filtro por Departamento
+---
 
-El estado `departamento` ya existe en `App.jsx`. Agrega la lógica de filtrado en el `useMemo`:
+## Build y despliegue
 
-```js
-const filtered = useMemo(() => {
-  return CONVENIOS.filter((c) => {
-    const matchQuery = !activeQuery || c.nombre.toLowerCase().includes(activeQuery.toLowerCase());
-    const matchDept  = !departamento || c.departamento === departamento;
-    return matchQuery && matchDept;
-  });
-}, [activeQuery, departamento]);
+Desde la carpeta del entorno que quieras empaquetar (**stable** o **canary**):
+
+```bash
+cd convenios-stable   # o: cd convenios-canary
+npm install
+npm run build
 ```
 
-### Reemplazar logos placeholder
+Se genera `dist/` con un típico layout de Vite, por ejemplo:
 
-Sustituye el componente `BankLogo` por una etiqueta `<img>` con la URL del logo real:
-
-```jsx
-// components/BankLogo.jsx
-export default function BankLogo({ banco, logoUrl }) {
-  return <img src={logoUrl} alt={banco} className="h-16 object-contain" />;
-}
+```text
+dist/
+├── index.html
+├── favicon.svg          # si existe en public/
+├── assets/
+│   ├── index-<hash>.js
+│   └── index-<hash>.css
+└── …                    # otros estáticos de public/
 ```
+
+Sube el **contenido** de `dist/` al bucket **S3** y sirve el sitio detrás de **CloudFront** (origen al bucket, políticas de caché y errores 404→`index.html` si aplica SPA).

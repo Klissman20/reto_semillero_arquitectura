@@ -43,7 +43,7 @@ export function mapLambdaItemsToConvenios(items) {
     return {
       id: `api-${simpleHash(seed)}-${index}`,
       nombre: item.nombre,
-      banco: item.ciudad?.trim() ? item.ciudad : "Convenio",
+      banco: "Convenio",
       ciudad: item.ciudad,
       url: item.url,
       imagen: item.imagen,

@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    port: 5174,
+    port: 5173,
     /**
      * cloudflared / ngrok / etc. envían Host=*.trycloudflare.com; Vite 6+ lo bloquea por defecto.
      * Solo aplica en dev (`npm run dev`), no en `vite preview` salvo que lo configures igual.
